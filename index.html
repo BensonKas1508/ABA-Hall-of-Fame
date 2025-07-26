@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball League Hall of Fame</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { ChevronLeft, ChevronRight, Trophy, Star, Calendar, User } = lucide;
+
+        const BasketballHallOfFame = () => {
+            const [currentView, setCurrentView] = useState('lockers');
+            const [selectedPlayer, setSelectedPlayer] = useState(null);
+            const [currentSlide, setCurrentSlide] = useState(0);
+
+            // CUSTOMIZE THIS DATA WITH YOUR PLAYERS
+            const hallOfFameMembers = [
+                {
+                    id: 1,
+                    name: "Michael Jordan",
+                    number: "23",
+                    team: "Chicago Bulls",
+                    color: "#CE1141",
+                    secondaryColor: "#000000",
+                    years: "1998-2003",
+                    achievements: ["6x Champion", "5x MVP", "14x All-Star"],
+                    stats: "30.1 PPG, 6.2 RPG, 5.3 APG",
+                    bio: "Legendary shooting guard who dominated the league for over a decade."
+                },
+                {
+                    id: 2,
+                    name: "Magic Johnson",
+                    number: "32",
+                    team: "Los Angeles Lakers",
+                    color: "#552583",
+                    secondaryColor: "#FDB927",
+                    years: "1979-1991",
+                    achievements: ["5x Champion", "3x MVP", "12x All-Star"],
+                    stats: "19.5 PPG, 7.2 RPG, 11.2 APG",
+                    bio: "Revolutionary point guard who changed the game with his size and vision."
+                },
+                {
+                    id: 3,
+                    name: "Larry Bird",
+                    number: "33",
+                    team: "Boston Celtics",
+                    color: "#007A33",
+                    secondaryColor: "#BA9653",
+                    years: "1979-1992",
+                    achievements: ["3x Champion", "3x MVP", "12x All-Star"],
+                    stats: "24.3 PPG, 10.0 RPG, 6.3 APG",
+                    bio: "Clutch performer and one of the greatest shooters in basketball history."
+                },
+                {
+                    id: 4,
+                    name: "Kobe Bryant",
+                    number: "24",
+                    team: "Los Angeles Lakers",
+                    color: "#552583",
+                    secondaryColor: "#FDB927",
+                    years: "1996-2016",
+                    achievements: ["5x Champion", "1x MVP", "18x All-Star"],
+                    stats: "25.0 PPG, 5.2 RPG, 4.7 APG",
+                    bio: "Mamba Mentality personified - relentless competitor and skilled scorer."
+                },
+                {
+                    id: 5,
+                    name: "LeBron James",
+                    number: "6",
+                    team: "Miami Heat",
+                    color: "#98002E",
+                    secondaryColor: "#F9A01B",
+                    years: "2010-2014",
+                    achievements: ["4x Champion", "4x MVP", "19x All-Star"],
+                    stats: "27.1 PPG, 7.5 RPG, 7.4 APG",
+                    bio: "Versatile forward who revolutionized the modern game."
+                },
+                {
+                    id: 6,
+                    name: "Tim Duncan",
+                    number: "21",
+                    team: "San Antonio Spurs",
+                    color: "#C4CED4",
+                    secondaryColor: "#000000",
+                    years: "1997-2016",
+                    achievements: ["5x Champion", "2x MVP", "15x All-Star"],
+                    stats: "19.0 PPG, 10.8 RPG, 3.0 APG",
+                    bio: "The Big Fundamental - model of consistency and team-first mentality."
+                }
+            ];
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    if (currentView === 'slideshow') {
+                        setCurrentSlide((prev) => (prev + 1) % hallOfFameMembers.length);
+                    }
+                }, 5000);
+                return () => clearInterval(interval);
+            }, [currentView, hallOfFameMembers.length]);
+
+            const Jersey = ({ player, onClick }) => (
+                React.createElement('div', {
+                    className: "relative group cursor-pointer transform transition-all duration-300 hover:scale-105",
+                    onClick: () => onClick(player)
+                }, [
+                    React.createElement('div', { className: "w-24 h-32 mx-auto relative" }, [
+                        React.createElement('div', {
+                            className: "w-full h-full rounded-t-lg relative shadow-lg",
+                            style: { backgroundColor: player.color }
+                        }, [
+                            React.createElement('div', { className: "absolute inset-0 flex items-center justify-center" },
+                                React.createElement('span', {
+                                    className: "text-2xl font-bold",
+                                    style: { color: player.secondaryColor }
+                                }, player.number)
+                            ),
+                            React.createElement('div', { className: "absolute top-2 left-2 right-2 h-1 bg-white opacity-30 rounded" }),
+                            React.createElement('div', { className: "absolute bottom-8 left-2 right-2 h-0.5 bg-white opacity-20 rounded" })
+                        ]),
+                        React.createElement('div', { className: "absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-gray-600 rounded-t-full" })
+                    ]),
+                    React.createElement('div', { className: "mt-3 text-center" }, [
+                        React.createElement('p', { className: "text-white font-semibold text-sm" }, player.name),
+                        React.createElement('p', { className: "text-gray-300 text-xs" }, player.team)
+                    ]),
+                    React.createElement('div', { className: "absolute inset-0 bg-yellow-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-lg" })
+                ])
+            );
+
+            const LockerRoom = () => (
+                React.createElement('div', { className: "min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black relative overflow-hidden" }, [
+                    React.createElement('div', { className: "absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-gray-700 to-transparent" },
+                        React.createElement('div', { className: "flex justify-around items-center h-full px-8" },
+                            [...Array(6)].map((_, i) => 
+                                React.createElement('div', { key: i, className: "w-12 h-8 bg-yellow-100 rounded opacity-80 shadow-lg" })
+                            )
+                        )
+                    ),
+                    React.createElement('div', { className: "pt-24 pb-12 px-8" }, [
+                        React.createElement('div', { className: "text-center mb-12" }, [
+                            React.createElement('h1', { className: "text-5xl font-bold text-white mb-4 tracking-wide" }, "HALL OF FAME"),
+                            React.createElement('div', { className: "w-32 h-1 bg-yellow-400 mx-auto mb-6" }),
+                            React.createElement('p', { className: "text-gray-300 text-lg" }, "Legends of the Game")
+                        ]),
+                        React.createElement('div', { className: "max-w-6xl mx-auto" },
+                            React.createElement('div', { className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 justify-items-center" },
+                                hallOfFameMembers.map((player) => 
+                                    React.createElement(Jersey, { key: player.id, player: player, onClick: setSelectedPlayer })
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: "absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-50" })
+                    ]),
+                    React.createElement('div', { className: "absolute bottom-8 right-8 flex gap-4" },
+                        React.createElement('button', {
+                            onClick: () => setCurrentView('slideshow'),
+                            className: "bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center gap-2"
+                        }, [React.createElement(Star, { size: 16 }), "Slideshow"])
+                    )
+                ])
+            );
+
+            const PlayerModal = ({ player, onClose }) => (
+                React.createElement('div', { className: "fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4" },
+                    React.createElement('div', { className: "bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" }, [
+                        React.createElement('div', {
+                            className: "h-32 rounded-t-lg relative",
+                            style: { background: `linear-gradient(135deg, ${player.color}, ${player.secondaryColor})` }
+                        }, [
+                            React.createElement('button', {
+                                onClick: onClose,
+                                className: "absolute top-4 right-4 text-white hover:text-gray-300 text-2xl font-bold"
+                            }, "×"),
+                            React.createElement('div', { className: "absolute bottom-4 left-6" }, [
+                                React.createElement('h2', { className: "text-3xl font-bold text-white" }, player.name),
+                                React.createElement('p', { className: "text-gray-200" }, `#${player.number} • ${player.team}`)
+                            ])
+                        ]),
+                        React.createElement('div', { className: "p-6" }, [
+                            React.createElement('div', { className: "grid md:grid-cols-2 gap-6 mb-6" }, [
+                                React.createElement('div', {}, [
+                                    React.createElement('h3', { className: "text-yellow-400 font-semibold mb-2 flex items-center gap-2" }, [
+                                        React.createElement(Calendar, { size: 16 }),
+                                        "Career Years"
+                                    ]),
+                                    React.createElement('p', { className: "text-white" }, player.years)
+                                ]),
+                                React.createElement('div', {}, [
+                                    React.createElement('h3', { className: "text-yellow-400 font-semibold mb-2 flex items-center gap-2" }, [
+                                        React.createElement(User, { size: 16 }),
+                                        "Career Stats"
+                                    ]),
+                                    React.createElement('p', { className: "text-white" }, player.stats)
+                                ])
+                            ]),
+                            React.createElement('div', { className: "mb-6" }, [
+                                React.createElement('h3', { className: "text-yellow-400 font-semibold mb-3 flex items-center gap-2" }, [
+                                    React.createElement(Trophy, { size: 16 }),
+                                    "Achievements"
+                                ]),
+                                React.createElement('div', { className: "flex flex-wrap gap-2" },
+                                    player.achievements.map((achievement, index) =>
+                                        React.createElement('span', {
+                                            key: index,
+                                            className: "bg-gray-800 text-white px-3 py-1 rounded-full text-sm"
+                                        }, achievement)
+                                    )
+                                )
+                            ]),
+                            React.createElement('div', {}, [
+                                React.createElement('h3', { className: "text-yellow-400 font-semibold mb-2" }, "Biography"),
+                                React.createElement('p', { className: "text-gray-300 leading-relaxed" }, player.bio)
+                            ])
+                        ])
+                    ])
+                )
+            );
+
+            const Slideshow = () => (
+                React.createElement('div', { className: "min-h-screen bg-black relative overflow-hidden" }, [
+                    React.createElement('div', {
+                        className: "absolute inset-0 transition-all duration-1000",
+                        style: { 
+                            background: `linear-gradient(135deg, ${hallOfFameMembers[currentSlide].color}15, ${hallOfFameMembers[currentSlide].secondaryColor}15)`
+                        }
+                    }),
+                    React.createElement('div', { className: "relative z-10 h-screen flex items-center justify-center p-8" },
+                        React.createElement('div', { className: "max-w-4xl w-full text-center" }, [
+                            React.createElement('div', { className: "mb-8" },
+                                React.createElement('div', {
+                                    className: "w-32 h-40 mx-auto mb-6 rounded-lg shadow-2xl relative",
+                                    style: { backgroundColor: hallOfFameMembers[currentSlide].color }
+                                },
+                                    React.createElement('div', { className: "absolute inset-0 flex items-center justify-center" },
+                                        React.createElement('span', {
+                                            className: "text-4xl font-bold",
+                                            style: { color: hallOfFameMembers[currentSlide].secondaryColor }
+                                        }, hallOfFameMembers[currentSlide].number)
+                                    )
+                                )
+                            ),
+                            React.createElement('h1', { className: "text-6xl font-bold text-white mb-4" }, hallOfFameMembers[currentSlide].name),
+                            React.createElement('p', { className: "text-2xl text-gray-300 mb-6" }, hallOfFameMembers[currentSlide].team),
+                            React.createElement('p', { className: "text-xl text-gray-400 mb-8" }, hallOfFameMembers[currentSlide].years),
+                            React.createElement('div', { className: "flex justify-center gap-4 mb-8" },
+                                hallOfFameMembers[currentSlide].achievements.slice(0, 3).map((achievement, index) =>
+                                    React.createElement('span', {
+                                        key: index,
+                                        className: "bg-yellow-500 text-black px-4 py-2 rounded-lg font-semibold"
+                                    }, achievement)
+                                )
+                            ),
+                            React.createElement('p', { className: "text-lg text-gray-300 max-w-2xl mx-auto" }, hallOfFameMembers[currentSlide].bio)
+                        ])
+                    ),
+                    React.createElement('div', { className: "absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4" }, [
+                        React.createElement('button', {
+                            onClick: () => setCurrentSlide((prev) => (prev - 1 + hallOfFameMembers.length) % hallOfFameMembers.length),
+                            className: "bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200"
+                        }, React.createElement(ChevronLeft, { size: 24 })),
+                        React.createElement('div', { className: "flex gap-2" },
+                            hallOfFameMembers.map((_, index) =>
+                                React.createElement('button', {
+                                    key: index,
+                                    onClick: () => setCurrentSlide(index),
+                                    className: `w-3 h-3 rounded-full transition-all duration-200 ${
+                                        index === currentSlide ? 'bg-yellow-400' : 'bg-white bg-opacity-30'
+                                    }`
+                                })
+                            )
+                        ),
+                        React.createElement('button', {
+                            onClick: () => setCurrentSlide((prev) => (prev + 1) % hallOfFameMembers.length),
+                            className: "bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200"
+                        }, React.createElement(ChevronRight, { size: 24 }))
+                    ]),
+                    React.createElement('button', {
+                        onClick: () => setCurrentView('lockers'),
+                        className: "absolute top-8 left-8 bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded-lg font-semibold transition-colors duration-200"
+                    }, "← Back to Hall of Fame")
+                ])
+            );
+
+            return React.createElement('div', {}, [
+                currentView === 'lockers' && React.createElement(LockerRoom),
+                currentView === 'slideshow' && React.createElement(Slideshow),
+                selectedPlayer && React.createElement(PlayerModal, { 
+                    player: selectedPlayer, 
+                    onClose: () => setSelectedPlayer(null) 
+                })
+            ]);
+        };
+
+        ReactDOM.render(React.createElement(BasketballHallOfFame), document.getElementById('root'));
+    </script>
+</body>
+</html>
